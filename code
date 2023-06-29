@@ -1,0 +1,190 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+
+void bubbleSort(int arr[], int n){
+    for(int i = 0; i < n-1; i++){
+        for(int j = 0; j < n-1-i; j++){
+            if(arr[j] > arr[j+1]){
+                int tmp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = tmp;
+            }
+        }
+    }
+}
+
+char * digitSort( char * str){
+    for(int i = 0; str[i] != '\0'; i++){
+        if('0' <= str[i] && str[i] <= '9'){
+            for(int j = i+1; str[j] != '\0'; j++){
+                if(str[i] < str[j]){
+                    char t = str[i];
+                    str[i] = str[j];
+                    str[j] = t;
+                }
+            }
+        }
+    }
+}
+struct bucket{
+    int count;
+    int * value;
+};
+
+int cmpInt(const void * first, const void * second){
+    return (*(int *) first) - (*(int *)second);
+}
+
+// 桶排序
+void bucketSort(int arr[], int n){
+    struct bucket buckets[3];
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    for(i = 0; i < n; i++){
+        buckets[i].count = 0;
+        buckets[i].value = (int*)malloc(sizeof (int) * n);
+    }
+    for (i = 0; i < n; i++) {
+        if(arr[i] < 0){
+            buckets[0].value[buckets[0].count++] = arr[i];
+        }
+        else if(arr[i] > 0){
+            buckets[2].value[buckets[2].count++] = arr[i];
+        }
+        else{
+            buckets[1].value[buckets[1].count++] = arr[i];
+        }
+    }
+    for (k = 0, i = 0; i < 3; i++)
+    {
+        // now using quicksort to sort the elements of buckets
+        qsort(buckets[i].value, buckets[i].count, sizeof(int), &cmpInt);
+        for (j = 0; j < buckets[i].count; j++)
+        {
+            arr[k + j] = buckets[i].value[j];
+        }
+        k += buckets[i].count;
+        free(buckets[i].value);
+    }
+}
+
+// 获取数组中数字的最大位数
+int getMaxBit(int arr[], int n){
+    int max = arr[0];
+    int digit = 0;
+    for(int i = 0; i < n; i++){
+        if(arr[i] > max){
+            max = arr[i];
+        }
+    }
+    while(max){
+        digit++;
+        max /= 10;
+    }
+    return digit;
+}
+
+// 获取整数M的第i位数
+int GetDigit(int M, int i)
+{
+    while(i > 1)
+    {
+        M /= 10;
+        i--;
+    }
+    return M % 10;
+}
+
+int * insertArr(int arr1[], int n1, int arr2[], int n2){
+    int * res = (int *) malloc(sizeof (int) * (n1 + n2));
+    memcpy(res, arr1, sizeof (int) * n1);
+    for(int i = 0; i < n2; i++){
+        for(int j = 0; j <= n1; j++){
+            if(res[j] >  arr2[i]){
+                for(int k = n1-1; k >= j; k--){
+                    res[k+1] = res[k];
+                }
+                res[j] = arr2[i];
+                n1 += 1;
+                break;
+            }
+        }
+    }
+    return res;
+}
+
+int * insertArrBySort(int arr1[], int n1, int arr2[], int n2){
+    int * res = (int *) malloc(sizeof (int) * (n1 + n2));
+    memcpy(res, arr1, sizeof (int) * 5);
+    memcpy(res+5, arr2, sizeof (int) * 3);
+    qsort(res, 8, sizeof (int), &cmp);
+    return res;
+}
+
+int pldArr(const int arr[], int n){
+    int left = 0;
+    int right = n-1;
+    while(left <= right){
+        if(arr[left] != arr[right]){
+            return -1;
+        }
+        left++;
+        right--;
+    }
+    return 1;
+}
+
+int count_dit(const int arr[], int n){
+    int res = 0;
+    for(int i = 0; i < n; i++){
+        int count = 0;
+        for(int j = 0; j < n; j++){
+            if(arr[i] == arr[j]){
+                count++;
+            }
+        }
+        res = res > count ? res : count;
+    }
+    return res;
+}
+int cmp(const void * a, const void * b){
+    return (*(int *)a - *(int *)b);
+}
+void calc_arr(int arr[], int n){
+    qsort(arr, n, sizeof (int), &cmp);
+    if(n % 2 == 1){
+        printf("中位数：%d\n", arr[n >> 1]);
+    }
+    else{
+        float midNum = 0;
+        midNum = (float)((arr[(n - 1) / 2] + arr[(n + 1) / 2]) >> 1);
+        printf("%6.2f", midNum);
+    }
+}
+
+int main(){
+
+//    int arr1[] = {1,2,5,7,9};
+//    int arr2[] = {3,6,10};
+//    int * res = insertArr(arr1, 5, arr2, 3);
+//    for(int i = 0; i < 8; i++){
+//        printf("%d ", res[i]);
+//        printf("\n");
+//    }
+
+//    int arr[] = {1,2,3,6,3,2,1};
+//    int res = pldArr(arr, 7);
+//    printf("%d\n", res);
+
+//    int arr[] = {1,2,3,2,5,6,5,2,3,2,5,1};
+//    int res = count_dit(arr, 12);
+//    printf("%d\n", res);
+
+//    int arr[] = {1,5,6,8,9};
+//    calc_arr(arr, 5);
+
+}
